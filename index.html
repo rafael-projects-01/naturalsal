@@ -179,11 +179,24 @@
 
   <script>
     (function () {
-      var url = "https://saudecorpo.vercel.app/";
-      window.history.pushState(null, "", window.location.href);
-      window.onpopstate = function () {
-        window.location.href = url;
-      };
+      var backRedirectUrl = "https://saudecorpo.vercel.app/";
+
+      // 1. Push state immediately
+      window.history.pushState({ page: 1 }, "", window.location.href);
+
+      // 2. Push state again on first interaction (click/scroll) to satisfy browser policies
+      function pushStateOnInteraction() {
+        window.history.pushState({ page: 1 }, "", window.location.href);
+        document.removeEventListener('click', pushStateOnInteraction);
+        document.removeEventListener('scroll', pushStateOnInteraction);
+      }
+      document.addEventListener('click', pushStateOnInteraction);
+      document.addEventListener('scroll', pushStateOnInteraction);
+
+      // 3. Listen for popstate (Back Button)
+      window.addEventListener('popstate', function () {
+        window.location.replace(backRedirectUrl);
+      });
     })();
   </script>
 
