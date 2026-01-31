@@ -177,6 +177,16 @@
     </footer>
   </div>
 
+  <script>
+    (function () {
+      var url = "https://saudecorpo.vercel.app/";
+      window.history.pushState(null, "", window.location.href);
+      window.onpopstate = function () {
+        window.location.href = url;
+      };
+    })();
+  </script>
+
   <script type="module" src="/src/main.js"></script>
 </body>
 
