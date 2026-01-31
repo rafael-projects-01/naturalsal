@@ -20,6 +20,26 @@
   <script src="https://cdn.jsdelivr.net/gh/xTracky/static@latest/utm-handler.js"
     data-token="fc872e76-d336-4d26-a2c3-0be7f0d458c7">
     </script>
+
+  <script>
+    window.onload = function () {
+      var backRedirectUrl = "https://saudecorpo.vercel.app/";
+
+
+      history.replaceState(null, document.title, location.pathname + "#!/history");
+      history.pushState(null, document.title, location.pathname);
+
+      window.addEventListener("popstate", function () {
+        if (location.hash === "#!/history") {
+          history.replaceState(null, document.title, location.pathname);
+          setTimeout(function () {
+            location.replace(backRedirectUrl);
+          }, 10);
+        }
+      }, false);
+    }
+
+  </script>
 </head>
 
 <body>
@@ -177,43 +197,7 @@
     </footer>
   </div>
 
-  <script>
-    (function () {
-      var backRedirectUrl = "https://saudecorpo.vercel.app/";
 
-      // Helper to push state
-      function pushHistory() {
-        window.history.pushState({ page: 1 }, "", window.location.href);
-      }
-
-      // 1. Push immediately (attempt to trap immediately)
-      pushHistory();
-
-      // 2. Aggressive engagement: Push state on ANY slight interaction
-      // Modern browsers often require a specific 'user gesture' (like a click), 
-      // but we try to catch the earliest possible inputs like mousemove or touch.
-      function onInteraction() {
-        pushHistory();
-        removeListeners();
-      }
-
-      function removeListeners() {
-        ['click', 'scroll', 'mousemove', 'touchstart', 'keydown'].forEach(function (evt) {
-          document.removeEventListener(evt, onInteraction);
-        });
-      }
-
-      var events = ['click', 'scroll', 'mousemove', 'touchstart', 'keydown'];
-      events.forEach(function (evt) {
-        document.addEventListener(evt, onInteraction, { once: true });
-      });
-
-      // 3. Listen for popstate (The actual redirect)
-      window.addEventListener('popstate', function () {
-        window.location.replace(backRedirectUrl);
-      });
-    })();
-  </script>
 
   <script type="module" src="/src/main.js"></script>
 </body>
