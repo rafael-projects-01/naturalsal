@@ -12,7 +12,7 @@
   --text-primary: #FFFFFF;
   --text-secondary: #E5E5E5;
   --text-tertiary: #999999;
-  --text-accent: #FFEB3B;
+  --text-accent: #E53935;
   --text-black: #000000;
   --text-link: #365899;
 
@@ -106,6 +106,13 @@ button {
 .headline {
   text-align: center;
   margin-bottom: 2rem;
+}
+
+.headline-image {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: 0 auto;
 }
 
 .headline h1 {
